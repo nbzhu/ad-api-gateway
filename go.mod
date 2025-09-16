@@ -4,7 +4,7 @@ go 1.23.2
 
 require github.com/nbzhu/ad-api-gateway-proto v0.0.0-00010101000000-000000000000
 
-//replace github.com/nbzhu/ad-api-gateway-proto => ./proto
+replace github.com/nbzhu/ad-api-gateway-proto => ./proto
 
 require (
 	github.com/nbzhu/flowRestrictor v1.1.7
