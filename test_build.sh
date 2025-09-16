@@ -24,7 +24,7 @@ git pull
 # 复制文件
 echo "Copying ..."
 #cp -r /data/src/ad-api-gateway/conf /data/etc/test/ad-api-gateway
-go build -v -o /data/bin/splay-admin/ad-api-gateway/ad-api-gateway /data/src/ad-api-gateway/main.go
+go build -v -o /data/bin/splay-admin/ad-api-gateway /data/src/ad-api-gateway/main.go
 
 echo "build Done."
 
