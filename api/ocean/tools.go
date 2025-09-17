@@ -26,7 +26,7 @@ func (s *Api) QueueLen(ctx context.Context, req *proto.QueueLenReq) (*proto.Queu
 
 func (s *Api) Awemes(ctx context.Context, req *proto.AwemesReq) (*proto.AwemesResp, error) {
 	body, code, err := global.Http.Get(ctx, "https://ad.oceanengine.com/open_api/2/tools/ies_account_search/",
-		map[string]string{"advertiserId": strconv.FormatUint(req.Params.AdvertiserId, 10)},
+		map[string]string{"advertiser_id": strconv.FormatUint(req.Params.AdvertiserId, 10)},
 		map[string]string{"Access-Token": s.getAccessToken(ctx)})
 	if err != nil {
 		return nil, err
