@@ -9,7 +9,7 @@ import (
 
 var FrMap = sync.Map{}
 
-func GetUniKey(fullMethod string, appNo uint32) string {
+func GetUniKey(fullMethod string, appNo uint64) string {
 	return fmt.Sprintf("%s-%d", fullMethod, appNo)
 }
 

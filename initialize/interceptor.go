@@ -185,10 +185,10 @@ func extractConfFromProtoMessage(m proto.Message) (*pb.Conf, error) {
 		return nil, errors.New("access_token_map 不能为空")
 	}
 
-	conf.AccessTokenMap = make(map[uint32]*pb.AppConf)
+	conf.AccessTokenMap = make(map[uint64]*pb.AppConf)
 	var rangeErr error
 	mp.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
-		key := uint32(k.Uint())
+		key := k.Uint()
 		if !v.IsValid() || !v.Message().IsValid() {
 			rangeErr = fmt.Errorf("access_token_map[%d] value invalid", key)
 			return true
