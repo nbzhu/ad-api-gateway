@@ -1,25 +1,13 @@
 #!/bin/bash
 
-#/data/bin/test/ad-api-gateway/test_ad-api-gateway api -c=/data/etc/test/ad-api-gateway/conf -log=/data/log/test/ad-api-gateway -env=qa
-# 检查是否提供了tag参数
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <tag>"
-    exit 1
-fi
-
-tag=$1
-
 # 切换到指定的tag
-cd /data/src/ad-api-gateway
+cd /data/src/ad-api-gateway/proto
 git checkout main
 git pull
-echo "Switching to tag $tag..."
-git checkout $tag
-git pull
 
-# 注意：通常不需要在tag上执行git pull，因为tag是固定的。
-# 如果你确实需要更新，可能需要先切换到某个分支，拉取更新，再切换回tag。
-# git pull
+cd ../
+git checkout main
+git pull
 
 # 复制文件
 echo "Copying ..."
