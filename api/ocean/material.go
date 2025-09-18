@@ -17,7 +17,7 @@ func (s *Api) VideoCoverSuggest(ctx context.Context, req *proto.VideoCoverSugges
 	if err != nil {
 		return nil, err
 	}
-	global.Log("log", map[string]interface{}{"req": req, "resp": string(body)})
+	//global.Log("log", map[string]interface{}{"req": req, "resp": string(body)})
 	resp := &proto.VideoCoverSuggestResp{}
 	if err = s.protoJson().Unmarshal(body, resp); err != nil {
 		return nil, fmt.Errorf("反序列化失败:%s。httpCode=%d,原始数据为:%s", err.Error(), code, string(body))
