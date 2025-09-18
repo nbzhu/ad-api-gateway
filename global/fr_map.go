@@ -9,8 +9,8 @@ import (
 
 var FrMap = sync.Map{}
 
-func GetUniKey(fullMethod string, appNo uint64) string {
-	return fmt.Sprintf("%s-%d", fullMethod, appNo)
+func GetUniKey(fullMethod string, devKey string) string {
+	return fmt.Sprintf("%s-%s", fullMethod, devKey)
 }
 
 func RegisterFr(uniKey string, fr *frPkg.Restrictor) error {

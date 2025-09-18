@@ -78,6 +78,9 @@ func UnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServ
 		return nil, errors.New("当前请求队列已满,func=" + info.FullMethod)
 	}
 	wg.Wait()
+	if errInner != nil {
+		global.Log("错误日志", map[string]interface{}{"Method": info.FullMethod, "req": req, "resp": resp, "err": errInner.Error()})
+	}
 	return resp, errInner
 }
 
@@ -105,8 +108,8 @@ type frWithToken struct {
 
 func initFqQueue(info *grpc.UnaryServerInfo, conf *pb.Conf) ([]frWithToken, error) {
 	var frs = make([]frWithToken, 0)
-	for appNo, appConf := range conf.AccessTokenMap {
-		queueName := global.GetUniKey(info.FullMethod, appNo)
+	for devKey, appConf := range conf.AccessTokenMap {
+		queueName := global.GetUniKey(info.FullMethod, devKey)
 		out, err, _ := sfgRestrictor.Do(queueName, func() (interface{}, error) {
 			fr, ok := global.GetFr(queueName)
 			if ok {
@@ -185,10 +188,10 @@ func extractConfFromProtoMessage(m proto.Message) (*pb.Conf, error) {
 		return nil, errors.New("access_token_map 不能为空")
 	}
 
-	conf.AccessTokenMap = make(map[uint64]*pb.AppConf)
+	conf.AccessTokenMap = make(map[string]*pb.AppConf)
 	var rangeErr error
 	mp.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
-		key := k.Uint()
+		key := k.String()
 		if !v.IsValid() || !v.Message().IsValid() {
 			rangeErr = fmt.Errorf("access_token_map[%d] value invalid", key)
 			return true

@@ -11,7 +11,7 @@ import (
 )
 
 func (s *Api) QueueLen(ctx context.Context, req *proto.QueueLenReq) (*proto.QueueLenResp, error) {
-	uniKey := global.GetUniKey(fmt.Sprintf("/ocean.Api/%s", req.Method), req.AppNo)
+	uniKey := global.GetUniKey(fmt.Sprintf("/ocean.Api/%s", req.Method), req.DevKey)
 	fr, ok := global.GetFr(uniKey)
 	if !ok {
 		return nil, errors.New("队列异常,uniKey=" + uniKey)
