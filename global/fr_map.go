@@ -39,7 +39,7 @@ func logChs(uniKey string, fr *frPkg.Restrictor) {
 			logs[fmt.Sprintf("%d", priority)] = l
 			lall += l
 		}
-		if lall > 0 {
+		if lall > 10 {
 			Log("队列长度["+uniKey+"]", logs)
 		}
 		time.Sleep(time.Second * 10)

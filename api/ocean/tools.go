@@ -7,7 +7,6 @@ import (
 	proto "github.com/nbzhu/ad-api-gateway-proto"
 	"github.com/nbzhu/ad-api-gateway/global"
 	"github.com/nbzhu/flowRestrictor/frPkg"
-	"google.golang.org/protobuf/encoding/protojson"
 	"strconv"
 )
 
@@ -32,7 +31,7 @@ func (s *Api) Awemes(ctx context.Context, req *proto.AwemesReq) (*proto.AwemesRe
 		return nil, err
 	}
 	resp := &proto.AwemesResp{}
-	if err = protojson.Unmarshal(body, resp); err != nil {
+	if err = s.protoJson().Unmarshal(body, resp); err != nil {
 		return nil, fmt.Errorf("反序列化失败:%s。httpCode=%d,原始数据为:%s", err.Error(), code, string(body))
 	}
 	return resp, nil
