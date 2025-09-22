@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	netUrl "net/url"
+	"strings"
 	"time"
 )
 
@@ -78,6 +79,35 @@ func (h *HttpClient) Post(ctx context.Context, url string, body []byte, headers 
 	}
 	defer resp.Body.Close()
 
+	data, err := io.ReadAll(resp.Body)
+	return data, resp.StatusCode, err
+}
+
+func (h *HttpClient) PostForm(ctx context.Context, url string, body netUrl.Values, headers map[string]string) ([]byte, int, error) {
+	req, err := http.NewRequestWithContext(ctx, "POST", url, strings.NewReader(body.Encode()))
+	if err != nil {
+		return nil, 0, err
+	}
+	for k, v := range headers {
+		req.Header.Set(k, v)
+	}
+	resp, err := h.client.Do(req)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	return data, resp.StatusCode, err
+}
+
+func (h *HttpClient) Do(request *http.Request) ([]byte, int, error) {
+	resp, err := h.client.Do(request)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer resp.Body.Close()
+	// 读取并打印响应
 	data, err := io.ReadAll(resp.Body)
 	return data, resp.StatusCode, err
 }
