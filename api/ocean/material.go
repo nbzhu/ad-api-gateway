@@ -3,6 +3,7 @@ package ocean
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	proto "github.com/nbzhu/ad-api-gateway-proto"
 	"github.com/nbzhu/ad-api-gateway/global"
@@ -65,6 +66,51 @@ func (s *Api) FileImageAd(ctx context.Context, req *proto.FileImageAdReq) (*prot
 	resp := &proto.FileImageAdResp{}
 	if err = s.protoJson().Unmarshal(respBody, resp); err != nil {
 		return nil, fmt.Errorf("反序列化失败:%s。httpCode=%d,原始数据为:%s", err.Error(), code, string(respBody))
+	}
+	return resp, nil
+}
+
+func (s *Api) FileUploadTaskCreate(ctx context.Context, req *proto.FileUploadTaskCreateReq) (*proto.FileUploadTaskCreateResp, error) {
+	params := map[string]interface{}{
+		"account_id":   req.Params.AccountId,
+		"account_type": req.Params.AccountType,
+		"filename":     req.Params.Filename,
+		"video_url":    req.Params.VideoUrl,
+		"is_aigc":      req.Params.IsAigc,
+	}
+	if len(req.Params.Labels) != 0 {
+		params["labels"] = req.Params.Labels
+	}
+	reqBody, _ := json.Marshal(params)
+	body, code, err := global.Http.Post(ctx, "https://api.oceanengine.com/open_api/2/file/upload_task/create/", reqBody,
+		map[string]string{"Access-Token": s.getAccessToken(ctx), "Content-Type": "application/json"})
+	if err != nil {
+		return nil, err
+	}
+	//global.Log("log", map[string]interface{}{"req": params, "resp": string(body)})
+	resp := &proto.FileUploadTaskCreateResp{}
+	if err = s.protoJson().Unmarshal(body, resp); err != nil {
+		return nil, fmt.Errorf("反序列化失败:%s。httpCode=%d,原始数据为:%s", err.Error(), code, string(body))
+	}
+	return resp, nil
+}
+
+func (s *Api) FileUploadTaskList(ctx context.Context, req *proto.FileUploadTaskListReq) (*proto.FileUploadTaskListResp, error) {
+	taskIds, _ := json.Marshal(req.Params.TaskIds)
+	body, code, err := global.Http.Get(ctx, "https://api.oceanengine.com/open_api/2/file/video/upload_task/list/",
+		map[string]string{
+			"account_id":   strconv.FormatUint(req.Params.AccountId, 10),
+			"account_type": req.Params.AccountType,
+			"task_ids":     string(taskIds),
+		},
+		map[string]string{"Access-Token": s.getAccessToken(ctx)})
+	if err != nil {
+		return nil, err
+	}
+	//global.Log("log", map[string]interface{}{"req": req, "resp": string(body)})
+	resp := &proto.FileUploadTaskListResp{}
+	if err = s.protoJson().Unmarshal(body, resp); err != nil {
+		return nil, fmt.Errorf("反序列化失败:%s。httpCode=%d,原始数据为:%s", err.Error(), code, string(body))
 	}
 	return resp, nil
 }
