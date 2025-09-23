@@ -81,7 +81,7 @@ func (s *Api) MicroAppList(ctx context.Context, req *proto.MicroAppListReq) (*pr
 	return resp, nil
 }
 
-func (s *Api) MicroAppDetail(ctx context.Context, req *proto.MicroAppDetailReq) (*proto.MicroAppDetailResp, error) {
+func (s *Api) AssetLinkList(ctx context.Context, req *proto.AssetLinkListReq) (*proto.AssetLinkListResp, error) {
 	if req.Params == nil || req.Params.Filtering == nil || req.Params.Filtering.InstanceId == 0 {
 		return nil, errors.New("资产id 必填")
 	}
@@ -103,7 +103,7 @@ func (s *Api) MicroAppDetail(ctx context.Context, req *proto.MicroAppDetailReq) 
 	if err != nil {
 		return nil, err
 	}
-	resp := &proto.MicroAppDetailResp{}
+	resp := &proto.AssetLinkListResp{}
 	if err = s.protoJson().Unmarshal(body, resp); err != nil {
 		return nil, fmt.Errorf("反序列化失败:%s。httpCode=%d,原始数据为:%s", err.Error(), code, string(body))
 	}
