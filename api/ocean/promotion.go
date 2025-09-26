@@ -10,7 +10,7 @@ import (
 func (s *Api) PromotionCreate(ctx context.Context, req *proto.PromotionCreateReq) (*proto.PromotionCreateResp, error) {
 	body, code, err := global.Http.Post(ctx, "https://api.oceanengine.com/open_api/v3.0/promotion/create/",
 		req.Params.Body,
-		map[string]string{"Access-Token": s.getAccessToken(ctx)})
+		map[string]string{"Access-Token": s.getAccessToken(ctx), "Content-Type": "application/json"})
 	if err != nil {
 		return nil, err
 	}
