@@ -90,12 +90,9 @@ func chooseFr(frs []frWithToken, conf *pb.Conf) frWithToken {
 		return frs[0]
 	}
 	if conf.AuthUniKey != "" {
-		for _, m := range conf.AccessTokenMap {
-			for _, fr := range frs {
-				if m.AccessToken == fr.accessToken {
-					fr.authUniKey = m.AuthUniKey
-					return fr
-				}
+		for _, fr := range frs {
+			if fr.authUniKey == conf.AuthUniKey {
+				return fr
 			}
 		}
 	}
@@ -128,6 +125,7 @@ func initFqQueue(info *grpc.UnaryServerInfo, conf *pb.Conf) ([]frWithToken, erro
 				return frWithToken{
 					fr:          fr,
 					accessToken: appConf.AccessToken,
+					authUniKey:  appConf.AuthUniKey,
 				}, nil
 			}
 			global.Log("初始化fr", map[string]interface{}{"queueName": queueName, "FullMethod": info.FullMethod, "conf": conf})
