@@ -277,7 +277,7 @@ func getOrBuildConfDesc(m protoreflect.Message) (*confFieldDesc, error) {
 		lowFD := confMsgDesc.Fields().ByName("low_priority_len")
 
 		// 准备 AppConf 的字段描述符（map 的 value）
-		var appConfQpsFD, appConfAccessTokenFD protoreflect.FieldDescriptor
+		var appConfQpsFD, appConfAccessTokenFD, appConfAuthUniKeyFD protoreflect.FieldDescriptor
 		if accessTokenMapFD != nil && accessTokenMapFD.Message() != nil {
 			// accessTokenMapFD.Message() 是 map entry 的 message descriptor，通常含有 "key" 和 "value"。
 			entry := accessTokenMapFD.Message()
@@ -287,6 +287,7 @@ func getOrBuildConfDesc(m protoreflect.Message) (*confFieldDesc, error) {
 				appConfMsgDesc := valueFD.Message()
 				appConfQpsFD = appConfMsgDesc.Fields().ByName("qps")
 				appConfAccessTokenFD = appConfMsgDesc.Fields().ByName("access_token")
+				appConfAuthUniKeyFD = appConfMsgDesc.Fields().ByName("auth_uni_key")
 			}
 		}
 
@@ -300,6 +301,7 @@ func getOrBuildConfDesc(m protoreflect.Message) (*confFieldDesc, error) {
 			lowPriorityLenFD:     lowFD,
 			appConfQpsFD:         appConfQpsFD,
 			appConfAccessTokenFD: appConfAccessTokenFD,
+			appConfAuthUniKeyFD:  appConfAuthUniKeyFD,
 		}
 		fdCache.Store(msgName, desc)
 		return desc, nil
