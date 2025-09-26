@@ -14,6 +14,10 @@ func (s *Api) getAccessToken(ctx context.Context) string {
 	return ctx.Value("access_token").(string)
 }
 
+func (s *Api) getAuthUniKey(ctx context.Context) string {
+	return ctx.Value("auth_uni_key").(string)
+}
+
 func (s *Api) protoJson() protojson.UnmarshalOptions {
 	return protojson.UnmarshalOptions{DiscardUnknown: true}
 }

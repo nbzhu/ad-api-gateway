@@ -26,6 +26,7 @@ func (s *Api) VideoCoverSuggest(ctx context.Context, req *proto.VideoCoverSugges
 	if err = s.protoJson().Unmarshal(body, resp); err != nil {
 		return nil, fmt.Errorf("反序列化失败:%s。httpCode=%d,原始数据为:%s", err.Error(), code, string(body))
 	}
+	resp.CommonResp = &proto.CommonResp{AuthUniKey: s.getAuthUniKey(ctx)}
 	return resp, nil
 }
 
@@ -92,6 +93,7 @@ func (s *Api) FileUploadTaskCreate(ctx context.Context, req *proto.FileUploadTas
 	if err = s.protoJson().Unmarshal(body, resp); err != nil {
 		return nil, fmt.Errorf("反序列化失败:%s。httpCode=%d,原始数据为:%s", err.Error(), code, string(body))
 	}
+	resp.CommonResp = &proto.CommonResp{AuthUniKey: s.getAuthUniKey(ctx)}
 	return resp, nil
 }
 

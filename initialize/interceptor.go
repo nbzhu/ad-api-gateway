@@ -64,6 +64,7 @@ func UnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServ
 	wg.Add(1)
 	frwt := chooseFr(frs, conf)
 	ctx = context.WithValue(ctx, "access_token", frwt.accessToken)
+	ctx = context.WithValue(ctx, "auth_uni_key", frwt.authUniKey)
 	if err = frClient.TryToDo(frwt.fr, frPkg.Priority(conf.Priority), frPkg.QueueData{
 		Func: func() error {
 			resp, errInner = handler(ctx, req)
@@ -88,6 +89,16 @@ func chooseFr(frs []frWithToken, conf *pb.Conf) frWithToken {
 	if len(frs) == 0 {
 		return frs[0]
 	}
+	if conf.AuthUniKey != "" {
+		for _, m := range conf.AccessTokenMap {
+			for _, fr := range frs {
+				if m.AccessToken == fr.accessToken {
+					fr.authUniKey = m.AuthUniKey
+					return fr
+				}
+			}
+		}
+	}
 	var frwt frWithToken
 	for _, item := range frs {
 		if frwt.accessToken == "" {
@@ -104,6 +115,7 @@ func chooseFr(frs []frWithToken, conf *pb.Conf) frWithToken {
 type frWithToken struct {
 	fr          *frPkg.Restrictor
 	accessToken string
+	authUniKey  string
 }
 
 func initFqQueue(info *grpc.UnaryServerInfo, conf *pb.Conf) ([]frWithToken, error) {
