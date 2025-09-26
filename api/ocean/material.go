@@ -88,7 +88,7 @@ func (s *Api) FileUploadTaskCreate(ctx context.Context, req *proto.FileUploadTas
 	if err != nil {
 		return nil, err
 	}
-	global.Log("log", map[string]interface{}{"req": params, "AuthUniKey": s.getAuthUniKey(ctx), "resp": string(body)})
+	//global.Log("log", map[string]interface{}{"req": params, "AuthUniKey": s.getAuthUniKey(ctx), "resp": string(body)})
 	resp := &proto.FileUploadTaskCreateResp{}
 	if err = s.protoJson().Unmarshal(body, resp); err != nil {
 		return nil, fmt.Errorf("反序列化失败:%s。httpCode=%d,原始数据为:%s", err.Error(), code, string(body))
