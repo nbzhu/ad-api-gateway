@@ -30,6 +30,7 @@ type confFieldDesc struct {
 	confFD              protoreflect.FieldDescriptor // conf
 	accessTokenMapFD    protoreflect.FieldDescriptor // conf.access_token_map
 	priorityFD          protoreflect.FieldDescriptor // conf.priority
+	authUniKeyFD        protoreflect.FieldDescriptor // conf.priority
 	highPriorityLenFD   protoreflect.FieldDescriptor // conf.high_priority_len
 	mediumPriorityLenFD protoreflect.FieldDescriptor // conf.medium_priority_len
 	lowPriorityLenFD    protoreflect.FieldDescriptor // conf.low_priority_len
@@ -37,6 +38,7 @@ type confFieldDesc struct {
 	// AppConf
 	appConfQpsFD         protoreflect.FieldDescriptor // AppConf.qps
 	appConfAccessTokenFD protoreflect.FieldDescriptor // AppConf.access_token
+	appConfAuthUniKeyFD  protoreflect.FieldDescriptor // AppConf.access_token
 }
 
 func UnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
@@ -180,6 +182,9 @@ func extractConfFromProtoMessage(m proto.Message) (*pb.Conf, error) {
 	if desc.priorityFD != nil && confMsg.Has(desc.priorityFD) {
 		conf.Priority = pb.Priority(confMsg.Get(desc.priorityFD).Enum())
 	}
+	if desc.authUniKeyFD != nil && confMsg.Has(desc.authUniKeyFD) {
+		conf.AuthUniKey = confMsg.Get(desc.authUniKeyFD).String()
+	}
 
 	if desc.highPriorityLenFD != nil && confMsg.Has(desc.highPriorityLenFD) {
 		conf.HighPriorityLen = uint32(confMsg.Get(desc.highPriorityLenFD).Uint())
@@ -216,6 +221,9 @@ func extractConfFromProtoMessage(m proto.Message) (*pb.Conf, error) {
 		}
 		if desc.appConfAccessTokenFD != nil && am.Has(desc.appConfAccessTokenFD) {
 			appConf.AccessToken = am.Get(desc.appConfAccessTokenFD).String()
+		}
+		if desc.appConfAuthUniKeyFD != nil && am.Has(desc.appConfAuthUniKeyFD) {
+			appConf.AuthUniKey = am.Get(desc.appConfAuthUniKeyFD).String()
 		}
 		if appConf.Qps == 0 {
 			rangeErr = fmt.Errorf("access_token_map[%d] qps 不能为空", key)
@@ -262,6 +270,7 @@ func getOrBuildConfDesc(m protoreflect.Message) (*confFieldDesc, error) {
 
 		// 找 conf 下的字段
 		priorityFD := confMsgDesc.Fields().ByName("priority")
+		authUniKey := confMsgDesc.Fields().ByName("auth_uni_key")
 		accessTokenMapFD := confMsgDesc.Fields().ByName("access_token_map")
 		highFD := confMsgDesc.Fields().ByName("high_priority_len")
 		mediumFD := confMsgDesc.Fields().ByName("medium_priority_len")
@@ -285,6 +294,7 @@ func getOrBuildConfDesc(m protoreflect.Message) (*confFieldDesc, error) {
 			confFD:               fd,
 			accessTokenMapFD:     accessTokenMapFD,
 			priorityFD:           priorityFD,
+			authUniKeyFD:         authUniKey,
 			highPriorityLenFD:    highFD,
 			mediumPriorityLenFD:  mediumFD,
 			lowPriorityLenFD:     lowFD,
