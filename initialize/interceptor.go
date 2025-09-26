@@ -66,7 +66,7 @@ func UnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServ
 	wg.Add(1)
 	frwt := chooseFr(frs, conf)
 	ctx = context.WithValue(ctx, "access_token", frwt.accessToken)
-	ctx = context.WithValue(ctx, "auth_uni_key", conf.AuthUniKey)
+	ctx = context.WithValue(ctx, "auth_uni_key", frwt.authUniKey)
 	if err = frClient.TryToDo(frwt.fr, frPkg.Priority(conf.Priority), frPkg.QueueData{
 		Func: func() error {
 			resp, errInner = handler(ctx, req)
