@@ -152,6 +152,7 @@ func initFqQueue(info *grpc.UnaryServerInfo, conf *pb.Conf) ([]frWithToken, erro
 			return frWithToken{
 				fr:          fr,
 				accessToken: appConf.AccessToken,
+				authUniKey:  appConf.AuthUniKey,
 			}, nil
 		})
 		if err != nil {
