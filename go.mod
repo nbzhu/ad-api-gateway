@@ -5,14 +5,14 @@ go 1.23.2
 replace github.com/nbzhu/ad-api-gateway-proto => ./proto
 
 require (
-	github.com/nbzhu/flowRestrictor v1.1.7
+	github.com/nbzhu/ad-api-gateway-proto v0.0.0-00010101000000-000000000000
+	github.com/nbzhu/flowRestrictor v1.1.8
 	golang.org/x/sync v0.15.0
 	google.golang.org/grpc v1.75.1
 	google.golang.org/protobuf v1.36.9
 )
 
 require (
-	github.com/nbzhu/ad-api-gateway-proto v0.0.0-00010101000000-000000000000 // indirect
 	golang.org/x/net v0.41.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.26.0 // indirect
