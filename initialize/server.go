@@ -7,9 +7,14 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"net/http"
+	_ "net/http/pprof"
 )
 
 func InitServer(port int) {
+	go func() {
+		log.Println(http.ListenAndServe("localhost:50052", nil))
+	}()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		log.Fatalf("监听失败: %v", err)
