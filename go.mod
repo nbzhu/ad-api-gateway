@@ -6,7 +6,7 @@ replace github.com/nbzhu/ad-api-gateway-proto => ./proto
 
 require (
 	github.com/nbzhu/ad-api-gateway-proto v0.0.0-00010101000000-000000000000
-	github.com/nbzhu/flowRestrictor v1.1.8
+	github.com/nbzhu/flowRestrictor v1.1.9
 	golang.org/x/sync v0.15.0
 	google.golang.org/grpc v1.75.1
 	google.golang.org/protobuf v1.36.9
